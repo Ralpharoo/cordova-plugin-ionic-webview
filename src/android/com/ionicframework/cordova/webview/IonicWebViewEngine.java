@@ -58,7 +58,16 @@ public class IonicWebViewEngine extends SystemWebViewEngine {
     WebViewLocalServer.AssetHostingDetails ahd = localServer.hostAssets("www");
 
     webView.setWebViewClient(new ServerClient(this, parser));
-
+    
+    // Enhance speed? https://stackoverflow.com/questions/32304237/android-webview-loading-data-performance-very-slow
+    webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+    if (Build.VERSION.SDK_INT >= 19) {
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+    }       
+    else {
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    }
+    
     super.init(parentWebView, cordova, client, resourceApi, pluginManager, nativeToJsMessageQueue);
     SharedPreferences prefs = cordova.getActivity().getApplicationContext().getSharedPreferences(IonicWebView.WEBVIEW_PREFS_NAME, Activity.MODE_PRIVATE);
     String path = prefs.getString(IonicWebView.CDV_SERVER_PATH, null);
